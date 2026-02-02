@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tense Rain — BM English</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#fbfcfd;--card:#fff;--accent:#0ea5a0;--muted:#6b7280;--text:#0f172a}
+    *{box-sizing:border-box}
+    body{font-family:'Poppins',Segoe UI,Roboto,Arial,sans-serif;margin:0;min-height:100vh;color:var(--text);background:linear-gradient(180deg,#fff 0%,#f8fafc 100%);}
+    header{padding:1rem;border-bottom:1px solid #eef3f6}
+    .container{max-width:1100px;margin:0 auto;padding:0 1rem}
+    .title-row{display:flex;align-items:center;gap:1rem;justify-content:space-between}
+    a.back, .back{color:var(--muted);text-decoration:none;padding:.5rem .8rem;border-radius:8px;border:1px solid #e6eef0;background:transparent;font-size:.95rem}
+    .controls{display:flex;gap:.6rem;align-items:center}
+
+    .game-area{margin-top:1.25rem;background:linear-gradient(180deg,#fff 0%,#f8fffb 100%);border:1px solid #e6eef0;border-radius:12px;padding:1rem;position:relative;overflow:hidden;height:62vh}
+    .sentence{font-size:1.25rem;font-weight:600;margin-bottom:.6rem}
+    .meta{display:flex;gap:1rem;align-items:center;color:var(--muted);font-weight:600}
+
+    .falling-btn{position:absolute;left:10%;top:-80px;padding:.7rem 1rem;border-radius:999px;background:var(--accent);color:#fff;border:0;cursor:pointer;box-shadow:0 8px 18px rgba(2,6,23,.08);transform:translateY(0);display:inline-block;font-size:1rem;min-width:7.5rem;text-align:center}
+    .falling-btn.secondary{background:#edf7f7;color:var(--accent-2);border:1px solid rgba(3,105,161,.06)}
+    @keyframes fall { to { transform: translateY(120vh); } }
+
+    /* Prominent start button placed below the play area */
+    .start-btn{display:block;max-width:320px;margin:12px auto 0;text-align:center;background:var(--accent);color:#fff;padding:.9rem 1.2rem;border-radius:999px;border:0;font-weight:700;box-shadow:0 10px 22px rgba(14,165,160,.12);font-size:1.05rem;cursor:pointer}
+    .start-btn:focus{outline:3px solid rgba(14,165,160,.15);outline-offset:3px}
+    @media (max-width:700px){ .start-btn{padding:.95rem 1.1rem;font-size:1.03rem;margin-top:10px} }
+
+    /* Larger buttons on smaller screens for readability */
+    @media (max-width:700px){ .falling-btn{padding:.85rem 1.1rem;font-size:1.05rem;min-width:8rem} }
+
+    /* Tutorial modal */
+    #tutorial{position:absolute;inset:0;display:none;z-index:60;align-items:center;justify-content:center;pointer-events:auto}
+    #tutorial .panel{max-width:720px;margin:auto;background:#fff;border-radius:12px;padding:1rem;border:1px solid #e6eef0;box-shadow:0 12px 30px rgba(2,6,23,.08);}
+
+    .overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%, rgba(2,6,23,0.02) 100%);pointer-events:none}
+
+    .status{margin-top:.75rem;color:var(--muted)}
+    .result{margin-top:1rem;padding:1rem;background:#fff;border-radius:10px;border:1px solid #e6eef0}
+
+    footer{margin-top:1rem;padding:1rem 0;color:var(--muted);text-align:center}
+
+    /* small screens */
+    @media (max-width:700px){ .sentence{font-size:1rem} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container title-row">
+      <div>
+        <a class="back" href="games.html">← Back</a>
+        <strong style="margin-left:.6rem">Tense Rain</strong>
+      </div> 
+      <div class="controls">
+        <div id="progress" class="meta">Round: 0 / 0</div>
+        <div id="score" class="meta">Score: 0</div>
+        <div id="best-wrap" class="meta">Best: <strong id="best-score">0</strong></div>
+        <button id="reset-best" class="back" title="Reset best score" aria-label="Reset best score">♻️</button>
+        <button id="mute" class="back" aria-pressed="false" title="Mute audio">🔊</button>
+        <button id="help" class="back" title="How to play">❓</button>
+        <button id="to-vocab" class="back" title="Play vocabulary game">🖼️ Vocab Game</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <br>
+      <div class="sentence" id="sentence">Click "Start Game" to begin — identify the tense!</div>
+      <div class="status" id="hint">Pick the tense for the sentence by clicking a falling button. Incorrect choices remove the button.</div>
+
+    <div class="game-area" id="play-area" aria-live="polite">
+
+      <div class="overlay" aria-hidden="true"></div>
+
+      <div id="tutorial" role="dialog" aria-modal="true" aria-labelledby="tutorial-title" style="display:none">
+        <div class="panel" role="document">
+          <h2 id="tutorial-title">How to play</h2>
+          <p style="color:var(--muted)">A sentence will appear above. Tense-labelled buttons will fall from the top. Click the button that matches the tense of the sentence. If you choose incorrectly, that button disappears (no penalty). The game consists of 5–10 rounds; your score is shown on the top-right. Good luck and have fun!</p>
+          <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.8rem">
+            <button id="got-it" class="back">Got it — Start</button>
+            <button id="got-it-dont-show" class="back">Got it — Don't show again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:12px">
+      <button id="start" class="start-btn" aria-label="Start game">Start Game</button>
+    </div>
+
+    <div id="final" class="result" style="display:none" role="status" aria-live="polite"></div>
+  </main>
+
+  <footer>
+    <!--<div class="container">Play 5–10 rounds — Good luck! ✅</div>-->
+  </footer>
+
+  <script>
+    // Tense game implementation
+    (() => {
+      // Sentences mapped to tense labels
+      const SENTENCES = [
+        {t: 'Present Simple', s: 'I work every day.'},
+        {t: 'Present Simple', s: 'She likes chocolate.'},
+        {t: 'Past Simple', s: 'They visited the museum yesterday.'},
+        {t: 'Past Simple', s: 'He wrote a letter last week.'},
+        {t: 'Present Continuous', s: 'They are playing soccer.'},
+        {t: 'Present Continuous', s: 'She is studying English now.'},
+        {t: 'Present Perfect', s: 'I have visited London twice.'},
+        {t: 'Present Perfect', s: 'We have already eaten.'},
+        {t: 'Past Continuous', s: 'She was reading when I called.'},
+        {t: 'Past Continuous', s: 'They were watching TV at 8pm.'},
+        {t: 'Future Simple', s: 'I will call you tomorrow.'},
+        {t: 'Present Perfect Continuous', s: 'He has been studying for two hours.'},
+
+        /* +100 new sentences for greater randomness */
+        {t: 'Present Simple', s: 'He drinks coffee every morning.'},
+        {t: 'Present Simple', s: 'They play tennis on Sundays.'},
+        {t: 'Present Simple', s: 'The shop opens at nine.'},
+        {t: 'Present Simple', s: 'Birds sing at dawn.'},
+        {t: 'Present Simple', s: 'Water boils at 100°C.'},
+        {t: 'Present Simple', s: 'She teaches at the college.'},
+        {t: 'Present Simple', s: 'The train leaves at six.'},
+        {t: 'Present Simple', s: 'I like spicy food.'},
+        {t: 'Present Simple', s: 'Dogs love to run.'},
+        {t: 'Present Simple', s: 'My sister studies law.'},
+        {t: 'Present Simple', s: 'He tells good jokes.'},
+        {t: 'Present Simple', s: 'The museum closes on Mondays.'},
+        {t: 'Present Simple', s: 'Plants need sunlight.'},
+        {t: 'Present Simple', s: 'We live in the city.'},
+        {t: 'Present Simple', s: 'The river flows to the sea.'},
+        {t: 'Past Simple', s: 'We watched a movie last night.'},
+        {t: 'Past Simple', s: 'She called me yesterday.'},
+        {t: 'Past Simple', s: 'They arrived late Saturday.'},
+        {t: 'Past Simple', s: 'I finished the report on Friday.'},
+        {t: 'Past Simple', s: 'He bought a new phone.'},
+        {t: 'Past Simple', s: 'The baby smiled and slept.'},
+        {t: 'Past Simple', s: 'They celebrated their anniversary.'},
+        {t: 'Past Simple', s: 'She lost her keys last week.'},
+        {t: 'Past Simple', s: 'I found a wallet on the street.'},
+        {t: 'Past Simple', s: 'He cleaned the house yesterday.'},
+        {t: 'Past Simple', s: 'We walked to the park.'},
+        {t: 'Past Simple', s: 'They sold the old car.'},
+        {t: 'Past Simple', s: 'She painted the fence last month.'},
+        {t: 'Past Simple', s: 'I cooked pasta for dinner.'},
+        {t: 'Past Simple', s: 'He broke the vase.'},
+        {t: 'Present Continuous', s: 'She is cooking dinner now.'},
+        {t: 'Present Continuous', s: 'They are having a meeting.'},
+        {t: 'Present Continuous', s: 'I am learning to drive.'},
+        {t: 'Present Continuous', s: 'He is fixing the bike.'},
+        {t: 'Present Continuous', s: 'We are planning a trip.'},
+        {t: 'Present Continuous', s: 'It is snowing outside.'},
+        {t: 'Present Continuous', s: 'They are building a new house.'},
+        {t: 'Present Continuous', s: 'She is reading a novel at the moment.'},
+        {t: 'Present Continuous', s: 'I am trying a new recipe.'},
+        {t: 'Present Continuous', s: 'The children are playing in the garden.'},
+        {t: 'Present Continuous', s: 'He is training for a marathon.'},
+        {t: 'Present Continuous', s: 'We are watching the game.'},
+        {t: 'Present Continuous', s: 'She is practicing the piano.'},
+        {t: 'Present Continuous', s: 'They are waiting for the bus.'},
+        {t: 'Present Continuous', s: 'I am writing an email.'},
+        {t: 'Past Continuous', s: 'I was walking when it started to rain.'},
+        {t: 'Past Continuous', s: 'She was studying while he cooked.'},
+        {t: 'Past Continuous', s: 'They were laughing at the joke.'},
+        {t: 'Past Continuous', s: 'He was driving home at seven.'},
+        {t: 'Past Continuous', s: 'We were listening to music last night.'},
+        {t: 'Past Continuous', s: 'The dog was barking all evening.'},
+        {t: 'Past Continuous', s: 'She was calling you when I arrived.'},
+        {t: 'Past Continuous', s: 'They were arguing about the plan.'},
+        {t: 'Past Continuous', s: 'I was reading the book at noon.'},
+        {t: 'Past Continuous', s: 'He was working on the project all day.'},
+        {t: 'Past Continuous', s: 'We were enjoying the concert.'},
+        {t: 'Past Continuous', s: 'They were hoping for good news.'},
+        {t: 'Past Continuous', s: 'She was looking for her glasses.'},
+        {t: 'Past Continuous', s: 'I was watching TV when the lights went out.'},
+        {t: 'Past Continuous', s: 'He was teaching while she prepared the notes.'},
+        {t: 'Present Perfect', s: 'I have seen that movie already.'},
+        {t: 'Present Perfect', s: 'She has finished her homework.'},
+        {t: 'Present Perfect', s: 'They have moved to a new house.'},
+        {t: 'Present Perfect', s: 'We have eaten breakfast.'},
+        {t: 'Present Perfect', s: 'He has written three books.'},
+        {t: 'Present Perfect', s: 'I have met him before.'},
+        {t: 'Present Perfect', s: 'She has lost her wallet.'},
+        {t: 'Present Perfect', s: 'They have visited Paris twice.'},
+        {t: 'Present Perfect', s: 'We have known each other for years.'},
+        {t: 'Present Perfect', s: 'He has cleaned the garage.'},
+        {t: 'Present Perfect', s: 'I have read that article.'},
+        {t: 'Present Perfect', s: 'She has started a new job.'},
+        {t: 'Present Perfect', s: 'They have fixed the leak.'},
+        {t: 'Present Perfect', s: 'We have saved enough money.'},
+        {t: 'Present Perfect', s: 'He has sold his bike.'},
+        {t: 'Future Simple', s: 'I will call you later.'},
+        {t: 'Future Simple', s: 'She will arrive soon.'},
+        {t: 'Future Simple', s: 'They will finish the work tomorrow.'},
+        {t: 'Future Simple', s: 'We will meet next week.'},
+        {t: 'Future Simple', s: 'He will help with the move.'},
+        {t: 'Future Simple', s: 'It will be sunny on Saturday.'},
+        {t: 'Future Simple', s: 'She will graduate next year.'},
+        {t: 'Future Simple', s: 'They will announce the winner tomorrow.'},
+        {t: 'Future Simple', s: 'I will take care of that.'},
+        {t: 'Future Simple', s: 'He will see the doctor on Monday.'},
+        {t: 'Present Perfect Continuous', s: 'I have been studying all morning.'},
+        {t: 'Present Perfect Continuous', s: 'She has been working here since March.'},
+        {t: 'Present Perfect Continuous', s: 'They have been playing for two hours.'},
+        {t: 'Present Perfect Continuous', s: 'We have been waiting a long time.'},
+        {t: 'Present Perfect Continuous', s: 'He has been practicing the guitar.'},
+        {t: 'Present Perfect Continuous', s: 'She has been running every day.'},
+        {t: 'Present Perfect Continuous', s: 'I have been learning French recently.'},
+        {t: 'Present Perfect Continuous', s: 'They have been renovating the kitchen.'},
+        {t: 'Present Perfect Continuous', s: 'We have been discussing the idea.'},
+        {t: 'Present Perfect Continuous', s: 'He has been feeling better lately.'},
+        {t: 'Present Simple', s: 'He always arrives early.'},
+        {t: 'Present Simple', s: 'They prefer tea over coffee.'},
+        {t: 'Present Simple', s: 'The sun rises in the east.'},
+        {t: 'Past Simple', s: 'She finished her speech at noon.'},
+        {t: 'Future Simple', s: 'They will visit us next month.'}
+      ];
+      const TENSES = [...new Set(SENTENCES.map(x => x.t))];
+
+      // Simple WebAudio sound manager for this page
+      const Sound = (function(){
+        let ctx=null, master=null, muted = localStorage.getItem('muted') === 'true';
+        function init(){ if (ctx) return; try { ctx = new (window.AudioContext || window.webkitAudioContext)(); master = ctx.createGain(); master.connect(ctx.destination); master.gain.value = muted ? 0 : 1; } catch(e){ console.warn('Audio init failed', e); }}
+        function tone(freq, dur=0.06, type='sine', vol=0.09){ init(); if (!ctx) return; const o = ctx.createOscillator(); const g = ctx.createGain(); o.type = type; o.frequency.value = freq; g.gain.value = vol; o.connect(g); g.connect(master); o.start(); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur); o.stop(ctx.currentTime + dur + 0.02); }
+        return {
+          click(){ tone(880,0.04,'square',0.08); }, hover(){ tone(1400,0.02,'sine',0.03); }, correct(){ tone(880,0.12,'sine',0.12); setTimeout(()=>tone(1320,0.08,'sine',0.12),120); }, wrong(){ tone(220,0.14,'sawtooth',0.12); }, toggle(){ init(); muted = !muted; if (master) master.gain.value = muted ? 0 : 1; localStorage.setItem('muted', String(muted)); return muted; }, isMuted(){ return muted; }
+        };
+      })();
+
+      // UI elements
+      const playArea = document.getElementById('play-area');
+      const sentenceEl = document.getElementById('sentence');
+      const startBtn = document.getElementById('start');
+      const muteBtn = document.getElementById('mute');
+      const progressEl = document.getElementById('progress');
+      const scoreEl = document.getElementById('score');
+      const finalBox = document.getElementById('final');
+
+      // Game state
+      let roundsToPlay = 0, currentRound = 0, score = 0;
+      let spawnInterval = null, spawnCountSinceCorrect = 0, haveSpawnedCorrect = false;
+
+      function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+      function pickSentence(){ return SENTENCES[randInt(0,SENTENCES.length-1)]; }
+
+      function startGame(){
+        roundsToPlay = randInt(5,10);
+        currentRound = 0; score = 0; finalBox.style.display = 'none'; updateUI(); nextRound();
+      }
+
+      function updateUI(){ progressEl.textContent = `Round: ${currentRound} / ${roundsToPlay}`; scoreEl.textContent = `Score: ${score}`; }
+
+      function clearFalling(){ const els = playArea.querySelectorAll('.falling-btn'); els.forEach(e=>e.remove()); }
+
+      function nextRound(){
+        currentRound += 1; updateUI(); clearFalling(); spawnCountSinceCorrect = 0; haveSpawnedCorrect = false;
+        if (currentRound > roundsToPlay){ endGame(); return; }
+        const pick = pickSentence(); playRoundFor(pick);
+      }
+
+      function endGame(){ sentenceEl.textContent = `Game complete — your score ${score} / ${roundsToPlay}`; finalBox.style.display = 'block'; finalBox.textContent = `Well done! You scored ${score} out of ${roundsToPlay}. Click Start Game to play again.`; currentRound = roundsToPlay; updateUI(); }
+
+      // spawn logic: keep spawning random tense buttons until correct chosen
+      let currentCorrectTense = null;
+      function playRoundFor(item){ currentCorrectTense = item.t; sentenceEl.textContent = item.s; document.getElementById('hint').textContent = 'Watch the falling tenses and click the correct one.'; 
+        // start spawning (slower so buttons are easier to click)
+        spawnInterval = setInterval(() => spawnButton(), 1200);
+        // spawn initial burst with wider spacing
+        for (let i=0;i<3;i++) setTimeout(spawnButton, i*600);
+      }
+
+      function spawnButton(){
+        if (!currentCorrectTense) return;
+        spawnCountSinceCorrect += 1;
+        // Decide label; make correct appear sometimes; ensure one forced correct after some spawns
+        let label;
+        const chanceCorrect = haveSpawnedCorrect ? 0.12 : 0.18; // low chance, forced later
+        if (Math.random() < chanceCorrect){ label = currentCorrectTense; haveSpawnedCorrect = true; }
+        else label = TENSES[randInt(0,TENSES.length-1)];
+
+        // Force correct if none after 7 spawns
+        if (!haveSpawnedCorrect && spawnCountSinceCorrect >= 7){ label = currentCorrectTense; haveSpawnedCorrect = true; }
+
+        // Create button
+        const btn = document.createElement('button');
+        btn.className = 'falling-btn';
+        btn.textContent = label;
+        btn.setAttribute('aria-label', `Tense: ${label}`);
+        btn.style.left = `${randInt(6,92)}%`;
+        const dur = (randInt(80,160)/10); // 8.0s - 16.0s (slower)
+        btn.style.animation = `fall ${dur}s linear forwards`;
+        btn.style.zIndex = 20 + Math.floor(Math.random()*10);
+        // click handler
+        btn.addEventListener('click', (e)=>{
+          e.stopPropagation(); if (label === currentCorrectTense){ Sound.correct(); score += 1; updateUI(); onRoundWin(); } else { Sound.wrong(); btn.remove(); }
+        });
+        // keyboard accessible
+        btn.tabIndex = 0;
+        btn.addEventListener('keydown', (e)=>{ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } });
+
+        // remove when animation ends
+        btn.addEventListener('animationend', ()=>{ btn.remove(); });
+
+        playArea.appendChild(btn);
+      }
+
+      function onRoundWin(){
+        // stop spawning, remove all buttons, move to next after short delay
+        clearInterval(spawnInterval); spawnInterval = null; 
+        const remain = playArea.querySelectorAll('.falling-btn'); remain.forEach(b => b.remove());
+        // small celebration and proceed
+        setTimeout(()=>{
+          if (currentRound < roundsToPlay) nextRound(); else endGame();
+        }, 700);
+      }
+
+      // Best score management
+      let bestScore = parseInt(localStorage.getItem('tenseGameBest') || '0', 10) || 0;
+      const bestScoreEl = document.getElementById('best-score');
+      const resetBestBtn = document.getElementById('reset-best');
+      function updateBestUI(){ bestScoreEl.textContent = String(bestScore); }
+      updateBestUI();
+
+      // Tutorial modal elements and logic
+      const tutorial = document.getElementById('tutorial');
+      const gotIt = document.getElementById('got-it');
+      const gotItNoShow = document.getElementById('got-it-dont-show');
+      const helpBtn = document.getElementById('help');
+      function showTutorial(){ tutorial.style.display = 'flex'; const ov = document.querySelector('.overlay'); if (ov){ ov.style.pointerEvents = 'auto'; ov.style.background = 'rgba(2,6,23,0.06)'; } tutorial.querySelector('button')?.focus(); }
+      function hideTutorial(){ tutorial.style.display = 'none'; const ov = document.querySelector('.overlay'); if (ov){ ov.style.pointerEvents = 'none'; ov.style.background = 'linear-gradient(180deg,transparent 0%, rgba(2,6,23,0.02) 100%)'; } }
+
+      // Start button — show tutorial for first-time users, otherwise start immediately
+      startBtn.addEventListener('click', ()=>{
+        Sound.click();
+        const seen = localStorage.getItem('seenTenseGameTutorial') === 'true';
+        if (!seen){ showTutorial(); }
+        else { startGame(); }
+      });
+
+      // Help shows tutorial on demand
+      helpBtn.addEventListener('click', ()=>{ showTutorial(); });
+
+      // Tutorial actions
+      gotIt.addEventListener('click', ()=>{ localStorage.setItem('seenTenseGameTutorial', 'true'); hideTutorial(); startGame(); });
+      gotItNoShow.addEventListener('click', ()=>{ localStorage.setItem('seenTenseGameTutorial', 'true'); hideTutorial(); startGame(); });
+
+      // Allow closing tutorial with Esc
+      document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && tutorial.style.display === 'flex') hideTutorial(); });
+
+      // Mute button
+      muteBtn.addEventListener('click', ()=>{ const m = Sound.toggle(); muteBtn.setAttribute('aria-pressed', String(m)); muteBtn.textContent = m ? '🔈' : '🔊'; muteBtn.focus(); });
+      // set initial mute state
+      (function(){ const m = localStorage.getItem('muted') === 'true'; muteBtn.setAttribute('aria-pressed', String(m)); muteBtn.textContent = m ? '🔈' : '🔊'; })();
+
+      // Reset best
+      resetBestBtn.addEventListener('click', ()=>{ if (confirm('Reset best score?')){ bestScore = 0; localStorage.setItem('tenseGameBest','0'); updateBestUI(); } });
+
+      // Hover sound on play area buttons
+      playArea.addEventListener('mouseover', (e)=>{ if (e.target.matches('.falling-btn')) Sound.hover(); });
+
+      // Update best when game ends (modify endGame function)
+      const originalEndGame = endGame;
+      window.endGame = function(){
+        // call original to set UI
+        originalEndGame();
+        // check best
+        if (score > bestScore){ bestScore = score; localStorage.setItem('tenseGameBest', String(bestScore)); updateBestUI(); finalBox.textContent = `New personal best! You scored ${score} out of ${roundsToPlay}.`; }
+        else { finalBox.textContent = `Game complete — your score ${score} / ${roundsToPlay}`; }
+      };
+
+      // If first visit, show tutorial automatically once (but not force start)
+      if (localStorage.getItem('seenTenseGameTutorial') !== 'true'){
+        // show tutorial but do not start game until user clicks Got it
+        showTutorial();
+      }
+
+      // Clean up when leaving
+      window.addEventListener('beforeunload', ()=>{ clearInterval(spawnInterval); });
+
+    })();
+  </script>
+</body>
+</html>

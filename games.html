@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Choose a Game — BM English</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600,700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#fbfcfd;--card:#fff;--accent:#0ea5a0;--muted:#6b7280;--text:#0f172a}
+    *{box-sizing:border-box}
+    body{font-family:'Poppins',Segoe UI,Roboto,Arial,sans-serif;margin:0;min-height:100vh;color:var(--text);background:linear-gradient(180deg,#fff 0%,#f8fafc 100%)}
+    header{padding:1rem;border-bottom:1px solid #eef3f6}
+    .container{max-width:1100px;margin:0 auto;padding:0 1rem}
+
+    .title-row{display:flex;align-items:center;gap:1rem;justify-content:space-between}
+    a.back, .back{color:var(--muted);text-decoration:none;padding:.5rem .8rem;border-radius:8px;border:1px solid #e6eef0;background:transparent;font-size:.95rem}
+
+    .games-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.25rem}
+    .game-card{background:var(--card);padding:1rem;border-radius:12px;border:1px solid #e6eef0;display:flex;gap:1rem;align-items:center;text-decoration:none;color:inherit}
+    .game-card:hover{box-shadow:0 12px 30px rgba(2,6,23,.06);transform:translateY(-4px)}
+    .game-card svg{width:72px;height:72px;flex-shrink:0}
+    .game-card h3{margin:0 0 .2rem}
+    .game-card p{margin:0;color:var(--muted);font-size:.95rem}
+
+    @media (max-width:700px){ .games-grid{grid-template-columns:1fr} .game-card{padding:.8rem} .game-card svg{width:56px;height:56px} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container title-row">
+      <div><a class="back" href="index.html">← Back</a> <strong style="margin-left:.6rem">Choose a Game</strong></div>
+      <div class="meta" style="color:var(--muted)">Pick a game to practice — click an icon to start</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section aria-labelledby="games-title">
+      <h1 id="games-title" style="margin-top:1.25rem">Available Games</h1>
+      <div class="games-grid" role="list">
+
+        <a class="game-card" role="listitem" href="tense-game.html" aria-label="Tense Practice: open">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="4" y="8" width="56" height="48" rx="6" fill="#e6f9f6" stroke="#d7f1ee"/>
+            <circle cx="32" cy="30" r="12" fill="#fff"/>
+            <path d="M32 22v10l8 4" stroke="#0ea5a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <div>
+            <h3>Tense Practice</h3>
+            <p>Practice verb tenses with quick, interactive rounds.</p>
+          </div>
+        </a>
+
+        <a class="game-card" role="listitem" href="vocab-game.html" aria-label="Vocab Rain: open">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="4" y="8" width="56" height="48" rx="6" fill="#fff7f0" stroke="#fbe7d8"/>
+            <g fill="#ffd166">
+              <ellipse cx="22" cy="28" rx="6" ry="8" />
+              <ellipse cx="42" cy="36" rx="6" ry="8" />
+            </g>
+            <path d="M18 14c3 2 8 2 10 0" stroke="#ff8a65" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+          <div>
+            <h3>Vocab Rain</h3>
+            <p>Click falling pictures that match the word in the centre.</p>
+          </div>
+        </a>
+
+      </div>
+
+      <!--<div style="margin-top:1.25rem;color:var(--muted)">Can't find a game? Contact your teacher for more content.</div>-->
+    </section>
+  </main>
+
+  <!--<footer class="container" style="padding:1.5rem 0;color:var(--muted);border-top:1px solid #eef3f6">© BM English Center</footer>-->
+</body>
+</html>

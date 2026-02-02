@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>English for All</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#fafafa; --card:#ffffff; --accent:#0ea5a0; --accent-2:#0369a1; --muted:#6b7280; --text:#0f172a;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{font-family:'Poppins',Segoe UI,Roboto,Arial,sans-serif;margin:0;color:var(--text);background:linear-gradient(180deg,#fbfcfd 0%,#f8fafc 100%)}
+
+    /* Header / Nav */
+    header{background:transparent}
+    .container{max-width:1100px;margin:0 auto;padding:0 1rem}
+    .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:1rem}
+    .brand{font-weight:700;color:var(--accent-2);font-size:1.15rem;text-decoration:none}
+    nav ul{list-style:none;margin:0;padding:0;display:flex;gap:.5rem;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;padding:.5rem .7rem;border-radius:10px;font-weight:500}
+    nav a:hover, nav a:focus{background:#eef6f6;color:var(--accent);outline:none}
+    .cta{background:var(--accent);color:#fff;padding:.6rem .9rem;border-radius:999px;box-shadow:0 6px 18px rgba(14,165,160,.12)}
+    .secondary{background:transparent;border:1px solid rgba(14,165,160,.12);padding:.5rem .8rem;border-radius:999px;color:var(--accent-2)}
+    .menu-toggle{display:none;border:0;background:transparent;font-size:1.35rem}
+    @media (max-width:800px){
+      .menu-toggle{display:inline-block}
+      nav ul{position:absolute;right:1rem;top:72px;background:var(--card);border:1px solid #e6eef0;padding:.6rem;flex-direction:column;display:none;box-shadow:0 10px 30px rgba(2,6,23,.08);min-width:200px;border-radius:10px}
+      nav ul.show{display:flex}
+    }
+
+    /* Hero */
+    .hero{display:flex;align-items:center;gap:2rem;padding:3rem 1rem;background:linear-gradient(90deg,rgba(3,105,161,.02),rgba(14,165,160,.02));border-bottom:1px solid #eef3f6}
+    .hero-inner{display:flex;align-items:center;justify-content:space-between;gap:2rem;width:100%}
+    .hero-copy{max-width:640px}
+    .eyebrow{display:inline-block;font-size:.875rem;color:var(--accent-2);font-weight:600;margin-bottom:.5rem}
+    .hero h1{font-size:2.1rem;margin:0 0 .5rem}
+    .hero p{color:var(--muted);margin:0 0 1rem}
+    .hero .actions{display:flex;gap:.75rem}
+
+    /* Cards */
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}
+    .card{background:var(--card);padding:1rem;border-radius:12px;box-shadow:0 8px 20px rgba(2,6,23,.06)}
+    .card h3{margin:.25rem 0 .5rem}
+    .card p{margin:0;color:var(--muted);font-size:.95rem}
+    @media (max-width:900px){.features{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:620px){.hero{padding:1.5rem 1rem}
+      .hero-inner{flex-direction:column;align-items:flex-start}
+      .features{grid-template-columns:1fr}
+    }
+
+    main{padding:2rem 1rem}
+    footer{background:transparent;padding:2rem 1rem;border-top:1px solid #eef3f6;text-align:center;color:var(--muted)}
+
+    /* Accessibility focus */
+    a:focus{outline:3px solid rgba(14,165,160,.15);outline-offset:3px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand">BM English Center</a>
+      <button id="sound-toggle" aria-pressed="false" aria-label="Mute site audio" title="Mute audio" class="secondary" style="margin-left:.6rem">🔊</button>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle menu">☰</button>
+      <nav id="main-nav" class="container" aria-label="Primary navigation">
+        <ul role="menubar" id="menu-list">
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <div class="eyebrow">Learn English • Any age • Any level</div>
+        <br><br>
+        <h1>English for Everybody</h1>
+        <h1>ภาษาอังกฤษสำหรับทุกคน</h1>
+        <br>
+        <!--<p>Interactive lessons, live small-group classes, and friendly tutors — designed for learners from all backgrounds. Start with a free trial lesson.</p> -->
+        <div class="actions">
+          <a class="cta" href="games.html">START NOW</a>
+        </div>
+      </div>
+      <div class="hero-media" aria-hidden="true">
+        <!-- Placeholder illustration -->
+        <svg width="220" height="160" viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of people learning">
+          <rect width="220" height="160" rx="12" fill="#fff" stroke="#e6eef0"/>
+          <circle cx="60" cy="50" r="22" fill="#eef6f6" stroke="#d7f1ee"/>
+          <circle cx="110" cy="70" r="18" fill="#eef6f6" stroke="#d7f1ee"/>
+          <rect x="28" y="100" width="164" height="28" rx="6" fill="#e6f9f6"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <section id="lessons" style="margin-top:2rem;" aria-labelledby="lessons-heading">
+      <h2 id="lessons-heading">Tenses & Verbs</h2>
+
+      <style>
+        .lesson{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1rem}
+        .lesson .panel{background:var(--card);padding:1rem;border-radius:10px;box-shadow:0 8px 18px rgba(2,6,23,.05)}
+        .lesson h3{margin:.25rem 0}
+        .examples{background:#f8fffd;border-left:4px solid var(--accent);padding:.6rem;border-radius:6px;font-size:.95rem}
+        .exercise{margin-top:1rem}
+        .quiz .question{margin-bottom:.75rem}
+        .quiz label{display:block;padding:.45rem;border-radius:8px;margin:.25rem 0;border:1px solid #eef3f6}
+        .quiz label.correct{background:#ecfffa;border-color:#7ee3d6}
+        .quiz label.wrong{background:#fff5f5;border-color:#fda4af}
+        .feedback{margin-top:.5rem;font-weight:600}
+        .flashcard{display:flex;flex-direction:column;align-items:center;gap:.6rem}
+        .card-face{width:260px;height:140px;border-radius:10px;background:#fff;padding:1rem;border:1px solid #e6eef0;display:flex;align-items:center;justify-content:center;text-align:center}
+        .controls{display:flex;gap:.5rem}
+        .btn{background:var(--accent);color:#fff;padding:.65rem .95rem;border-radius:8px;border:0;cursor:pointer;font-size:.98rem}
+        .btn.secondary{background:#edf7f7;color:var(--accent-2);padding:.6rem .9rem;font-size:.95rem}
+        @media (max-width:900px){.lesson{grid-template-columns:1fr}}
+      </style>
+
+      <div class="lesson">
+        <div class="panel" id="tenses">
+          <h3>Present Simple</h3>
+          <p><strong>Structure:</strong> Subject + base verb (add -s/-es for he/she/it)</p>
+          <div class="examples"><strong>Example:</strong> I work every day. She works on Mondays.</div>
+
+          <h3 style="margin-top:.8rem">Past Simple</h3>
+          <p><strong>Structure:</strong> Subject + past verb (regular verbs add -ed)</p>
+          <div class="examples"><strong>Example:</strong> They visited the museum yesterday.</div>
+
+          <h3 style="margin-top:.8rem">Present Continuous</h3>
+          <p><strong>Structure:</strong> Subject + am/is/are + verb-ing</p>
+          <div class="examples"><strong>Example:</strong> She is studying English now.</div>
+
+          <h3 style="margin-top:.8rem">Present Perfect</h3>
+          <p><strong>Structure:</strong> Subject + have/has + past participle</p>
+          <div class="examples"><strong>Example:</strong> I have visited London twice.</div>
+        </div>
+
+        <div class="panel" id="verbs">
+          <h3>Verbs</h3>
+          <p><strong>Regular verbs:</strong> follow a pattern in past/past-participle (e.g., walk → walked)</p>
+          <p><strong>Irregular verbs:</strong> need to be learned (e.g., go → went → gone)</p>
+          <div style="margin-top:.6rem">
+            <strong>Common irregular verbs:</strong>
+            <ul style="margin:.4rem 0;color:var(--muted)">
+              <li>be — was/were — been</li>
+              <li>go — went — gone</li>
+              <li>have — had — had</li>
+              <li>do — did — done</li>
+              <li>see — saw — seen</li>
+            </ul>
+          </div>
+
+          <div class="exercise" aria-labelledby="practice-heading">
+            <h3 id="practice-heading">Quick Practice</h3>
+            <div class="quiz" id="quiz">
+              <div class="question" data-index="0">
+                <div><strong>1.</strong> Choose the correct sentence:</div>
+                <label><input type="radio" name="q0" data-correct="false"> He go to school every day.</label>
+                <label><input type="radio" name="q0" data-correct="true"> He goes to school every day.</label>
+                <label><input type="radio" name="q0" data-correct="false"> He going to school every day.</label>
+              </div>
+
+              <div class="question" data-index="1">
+                <div><strong>2.</strong> Choose the correct past form:</div>
+                <label><input type="radio" name="q1" data-correct="true"> She ate breakfast.</label>
+                <label><input type="radio" name="q1" data-correct="false"> She eated breakfast.</label>
+              </div>
+
+              <div class="question" data-index="2">
+                <div><strong>3.</strong> Choose the correct continuous:</div>
+                <label><input type="radio" name="q2" data-correct="true"> They are playing soccer.</label>
+                <label><input type="radio" name="q2" data-correct="false"> They playing soccer.</label>
+              </div>
+
+              <div class="question" data-index="3">
+                <div><strong>4.</strong> Present Perfect correct form:</div>
+                <label><input type="radio" name="q3" data-correct="true"> I have seen that movie.</label>
+                <label><input type="radio" name="q3" data-correct="false"> I seen that movie.</label>
+              </div>
+
+              <button class="btn" type="button" onclick="checkQuiz()">Check Answers</button>
+              <div id="quiz-feedback" class="feedback" role="status" aria-live="polite"></div>
+            </div>
+
+            <div style="margin-top:1rem">
+              <h4>Fill in the blanks</h4>
+              <p>Complete the sentence: "She ___ (go) to school yesterday."</p>
+              <input id="fill1" type="text" aria-label="Fill blank 1" style="padding:.5rem;border-radius:6px;border:1px solid #e6eef0">
+              <button class="btn secondary" type="button" onclick="checkFillBlanks()">Check</button>
+              <div id="fill-feedback" class="feedback" role="status" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.25rem">
+        <h3>Flashcards: Irregular Verbs</h3>
+        <div class="flashcard" aria-live="polite">
+          <div id="flash-face" class="card-face">go → ?</div>
+          <div class="controls">
+            <button class="btn secondary" type="button" onclick="prevCard()">Prev</button>
+            <button class="btn" type="button" onclick="flipCard()">Flip</button>
+            <button class="btn secondary" type="button" onclick="nextCard()">Next</button>
+          </div>
+          <div id="flash-info" style="color:var(--muted);margin-top:.5rem"></div>
+        </div>
+      </div>
+
+    </section>
+
+    </br>
+  </main>
+
+  <script>
+    (function(){
+      const btn = document.querySelector('.menu-toggle');
+      const menu = document.getElementById('menu-list');
+      btn.addEventListener('click', ()=> {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        menu.classList.toggle('show');
+      });
+      // Close menu when clicking outside (mobile)
+      document.addEventListener('click', (e)=>{
+        if (!e.target.closest('.nav')) {
+          menu.classList.remove('show');
+          btn.setAttribute('aria-expanded','false');
+        }
+      });
+      // Keyboard: ESC closes menu
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape') {
+          menu.classList.remove('show');
+          btn.setAttribute('aria-expanded','false');
+          btn.focus();
+        }
+      });
+    })();
+  </script>
+
+  <script>
+    // Lesson interactivity: quiz, fill-in-the-blank, flashcards
+    function checkQuiz(){
+      const questions = document.querySelectorAll('#quiz .question');
+      let score = 0;
+      questions.forEach((q, i) => {
+        const labels = q.querySelectorAll('label');
+        labels.forEach(l => l.classList.remove('correct','wrong'));
+        const checked = q.querySelector('input:checked');
+        if (!checked) return;
+        if (checked.dataset.correct === 'true'){
+          checked.parentElement.classList.add('correct');
+          score += 1;
+        } else {
+          checked.parentElement.classList.add('wrong');
+        }
+      });
+      const feedback = document.getElementById('quiz-feedback');
+      feedback.textContent = `You scored ${score} / ${questions.length}.`;
+    }
+
+    function checkFillBlanks(){
+      const answer = document.getElementById('fill1').value.trim().toLowerCase();
+      const feedback = document.getElementById('fill-feedback');
+      const input = document.getElementById('fill1');
+      input.style.borderColor = '';
+      if (answer === 'went'){
+        feedback.textContent = 'Correct — "She went to school yesterday."';
+        input.style.borderColor = '#16a34a';
+      } else if (answer === ''){
+        feedback.textContent = 'Try typing an answer.';
+        input.style.borderColor = '#f59e0b';
+      } else {
+        feedback.textContent = 'Not quite — the correct answer is "went".';
+        input.style.borderColor = '#ef4444';
+      }
+    }
+
+    // Flashcards
+    const flashcards = [
+      {front:'go → ?', back:'went — gone', info:'go — went — gone'},
+      {front:'be → ?', back:'was/were — been', info:'be — was/were — been'},
+      {front:'have → ?', back:'had — had', info:'have — had — had'},
+      {front:'do → ?', back:'did — done', info:'do — did — done'},
+    ];
+    let flashIndex = 0;
+    let flipped = false;
+    const faceEl = document.getElementById('flash-face');
+    const infoEl = document.getElementById('flash-info');
+    function renderCard(){
+      const card = flashcards[flashIndex];
+      faceEl.textContent = flipped ? card.back : card.front;
+      infoEl.textContent = flipped ? card.info : 'Click "Flip" to see forms.';
+    }
+    function flipCard(){
+      flipped = !flipped; renderCard();
+    }
+    function nextCard(){
+      flashIndex = (flashIndex + 1) % flashcards.length; flipped = false; renderCard();
+    }
+    function prevCard(){
+      flashIndex = (flashIndex - 1 + flashcards.length) % flashcards.length; flipped = false; renderCard();
+    }
+
+    // Initialize after DOM loaded
+    document.addEventListener('DOMContentLoaded', ()=>{
+      renderCard();
+    });
+  </script>
+
+  <script>
+    (function(){
+      // Site-wide WebAudio-based sound manager (small tones)
+      const SoundManager = (function(){
+        let ctx=null, master=null, muted = localStorage.getItem('muted') === 'true';
+        function init(){
+          if (ctx) return;
+          try {
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+            master = ctx.createGain();
+            master.connect(ctx.destination);
+            master.gain.value = muted ? 0 : 1;
+          } catch(e){ console.warn('Audio init failed', e); }
+        }
+        function playTone(freq, time=0.06, type='sine', vol=0.09){
+          init(); if (!ctx) return;
+          const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = type; o.frequency.value = freq; g.gain.value = vol;
+          o.connect(g); g.connect(master);
+          o.start(); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + time);
+          o.stop(ctx.currentTime + time + 0.02);
+        }
+        return {
+          playClick(){ playTone(880,0.05,'square',0.08); },
+          playHover(){ playTone(1400,0.02,'sine',0.03); },
+          playCorrect(){ playTone(880,0.12,'sine',0.12); setTimeout(()=>playTone(1320,0.08,'sine',0.12),120); },
+          playWrong(){ playTone(220,0.14,'sawtooth',0.12); },
+          toggleMute(){ init(); muted = !muted; if (master) master.gain.value = muted ? 0 : 1; localStorage.setItem('muted', String(muted)); return muted; },
+          isMuted(){ return muted; }
+        };
+      })();
+
+      // Attach hover/click feedback to buttons and links
+      document.addEventListener('mouseover', e => { if (e.target.matches('button, a, .btn')) SoundManager.playHover(); }, {passive:true});
+      document.addEventListener('focusin', e => { if (e.target.matches('button, a, .btn')) SoundManager.playHover(); });
+      document.addEventListener('click', e => { if (e.target.matches('button, a, .btn')) { if (e.target.id === 'sound-toggle') return; SoundManager.playClick(); } });
+
+      // Mute toggle
+      const soundToggle = document.getElementById('sound-toggle');
+      if (soundToggle){
+        const setState = (m) => { soundToggle.setAttribute('aria-pressed', String(m)); soundToggle.textContent = m ? '🔈' : '🔊'; soundToggle.title = m ? 'Unmute audio' : 'Mute audio'; };
+        setState(localStorage.getItem('muted') === 'true');
+        soundToggle.addEventListener('click', ()=>{ const m = SoundManager.toggleMute(); setState(m); soundToggle.focus(); });
+      }
+
+      // Expose to other pages/scripts
+      window.PlaySound = { correct: ()=> SoundManager.playCorrect(), wrong: ()=> SoundManager.playWrong(), click: ()=> SoundManager.playClick() };
+    })();
+  </script>
+</body>
+</html>
